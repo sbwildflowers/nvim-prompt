@@ -5,12 +5,12 @@ Module for in-editor prompting / chatting with LLM. Currently has pre-built prom
 My current setup for using it with a local model looks like this:
 
 ```
-require('nvim-prompt.lua.config').setup({
+require('nvim-prompt.config').setup({
 	url = "http://localhost:1234/v1/chat/completions",
 	model = "qwen2.5-coder-14b-instruct"
 })
 
-local prompt = require('nvim-prompt.lua.ui')
+local prompt = require('nvim-prompt.ui')
 
 -- take selected text and send to LLM with "Explain this code:" prefix
 vim.keymap.set("v", "<leader>ec", function() vim.cmd('normal! "zy') prompt:get_explanation() end, { noremap = true })
@@ -25,6 +25,7 @@ Currently uses ```vim.ui.input()``` for continuous prompting / follow-up questio
 ## Future
 
 - Better input method for conversation
+- Handle http errors
 - Allow users to define dynamic pre-built prompts into config
 - Parsing of returned answers, especially code blocks, to make it more readable
 
