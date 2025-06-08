@@ -1,6 +1,6 @@
 # Neovim Prompt
 
-Module for in-editor prompting / chatting with LLM. Currently has pre-built prompt that allows you to select a code block and fire it off asking for an explanation. Also you can start a fresh conversation without sending any code. 
+Module for in-editor prompting / chatting with LLM. Currently has pre-built prompt that allows you to select a code block and fire it off prefixed with "Explain this code:". You can also start a fresh conversation without sending any code. 
 
 My current setup for using it with a local model looks like this:
 
@@ -20,7 +20,7 @@ vim.keymap.set("n", "<leader>aq", function() prompt:start_prompting() end)
 
 ```
 
-Currently uses vim.ui.input() for continuous prompting / follow-up questions. Type "exit" to end conversation. Currently can't exit/re-enter conversation or switch between buffers while a conversation is ongoing.
+Currently uses ```vim.ui.input()``` for continuous prompting / follow-up questions. Type ```exit``` to end conversation. Currently can't exit/re-enter conversation or switch between buffers while a conversation is ongoing.
 
 ## Future
 
