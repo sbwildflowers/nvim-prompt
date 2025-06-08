@@ -1,5 +1,5 @@
-local prompts = require('nvim-prompt.lua.prompts')
-local requests = require('nvim-prompt.lua.requests')
+local prompts = require('nvim-prompt.prompts')
+local requests = require('nvim-prompt.requests')
 
 local M = {}
 

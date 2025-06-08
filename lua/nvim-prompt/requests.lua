@@ -1,4 +1,4 @@
-local config = require('nvim-prompt.lua.config')
+local config = require('nvim-prompt.config')
 
 local M = {}
 
