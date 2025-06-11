@@ -23,6 +23,7 @@ local function get_buffer()
     local buf = vim.api.nvim_create_buf(false, true)
     vim.cmd('set splitright')
     vim.cmd("vsplit")
+    vim.cmd("set wrap")
     local win = vim.api.nvim_get_current_win()
     vim.api.nvim_win_set_buf(win, buf)
     return buf
@@ -59,9 +60,17 @@ local function keep_prompting(buf, prompt_list, all_data, callback)
                 if input == 'exit' then
                     still_asking = false
                 else
-                    table.insert(prompt_list, input)
                     all_data = get_current_window_lines()
-                    all_data = all_data .. '\n' .. '[QUESTION] ' .. input .. '\n\n'
+                    if string.find(all_data, '[END ANSWER]') then
+                        local conversation_parts = vim.fn.split(all_data, '\\[END ANSWER\\]')
+                        local prev_interaction = conversation_parts[#conversation_parts - 1]
+                        local prev_parts = vim.fn.split(prev_interaction, '\\[ANSWER\\]')
+                        local assistant_obj = { role = "assistant", content = prev_parts[#prev_parts] }
+                        table.insert(prompt_list, assistant_obj)
+                    end
+                    local prompt_obj = { role = "user", content = input }
+                    table.insert(prompt_list, prompt_obj)
+                    all_data = all_data .. '\n' .. '[QUESTION]\n' .. input .. '\n\n'
                     requests.ask_llm(buf, prompt_list, all_data, callback)
                 end
             end
@@ -79,9 +88,10 @@ end
 function M.get_explanation()
     local buf = get_buffer()
     local prompt = prompts.explain_code_prompt()
-    local all_data = ''
+    local all_data = '[QUESTION]\n' .. prompt .. '\n'
+    local prompt_obj = { role = "user", content = prompt}
     local prompt_list = {}
-    table.insert(prompt_list, prompt)
+    table.insert(prompt_list, prompt_obj)
     requests.ask_llm(buf, prompt_list, all_data, handle_streaming_data)
     vim.cmd('redraw')
     keep_prompting(buf, prompt_list, all_data, handle_streaming_data)

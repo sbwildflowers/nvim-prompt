@@ -6,22 +6,22 @@ local M = {}
 function M.ask_llm(buf, prompts, all_data, callback)
     local curl = require('plenary.curl')
     local user_config = config.get_config()
-    local messages = {}
-    for i = 1, #prompts do
-        local prompt_obj = { role = "user", content = prompts[i] }
-        table.insert(messages, prompt_obj)
-    end
+    --local messages = {}
+    --for i = 1, #prompts do
+        --local prompt_obj = { role = "user", content = prompts[i] }
+        --table.insert(messages, prompt_obj)
+    --end
 
     local request_data = {
         model = user_config.model,
         stream = true,
-        messages = messages,
+        messages = prompts,
         max_tokens = -1
     }
 
     local request_data_json = vim.fn.json_encode(request_data)
 
-    all_data = all_data .. '[ANSWER] '
+    all_data = all_data .. '[ANSWER]\n'
 
     curl.post(user_config.url, {
         body = request_data_json,
